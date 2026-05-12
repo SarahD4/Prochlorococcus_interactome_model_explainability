@@ -68,16 +68,20 @@ ppiGPT is a 12-layer, 12-head, 768-dimensional GPT-2 architecture (84.98M parame
 | Mann-Whitney U | U = 1,018,862 | 1.64 x 10^-192 |
 | Cohen's d | 1.91 (large) | -- |
 
-## Large Files Not Included
+## Model Checkpoint & Large Files
 
-The following files are excluded due to size but can be regenerated from the analysis scripts:
+The trained ppiGPT checkpoint and large result files are hosted on Hugging Face:
 
-- `results/deeplift_motif_analysis_results.pkl` (78 MB) — complete Captum DeepLift attribution arrays for all 2,168 protein pairs, motif discovery results, and position-wise statistics. Regenerate with `analysis/deeplift/captum_deeplift_proper_analysis.py`.
-- `results/integrated_gradients_random_ppi_per_token_attributions.csv` (174 MB) — per-token IG attributions. Regenerate with `analysis/integrated_gradients/captum_integrated_gradients_enhanced.py`.
+**https://huggingface.co/GreenGenomicsLab/Prochlorococcus_interactome_model_explainability**
 
-## Model Checkpoint
+Download and place them locally before running analysis scripts:
 
-The trained ppiGPT checkpoint (`out_3e/ckpt.pt`) is not included in this repository due to size. Place the checkpoint at `model/out_3e/ckpt.pt` and the tokenizer metadata at `model/data/meta.pkl` before running analysis scripts.
+| HF Path | Local Path | Size | Description |
+|---------|------------|------|-------------|
+| `model/out_3e/ckpt.pt` | `model/out_3e/ckpt.pt` | 1.0 GB | ppiGPT model checkpoint (84.98M params, 3 epochs) |
+| `model/data/meta.pkl` | `model/data/meta.pkl` | 343 B | Tokenizer metadata (29-token vocabulary) |
+| `results/deeplift_motif_analysis_results.pkl` | `results/deeplift_motif_analysis_results.pkl` | 78 MB | Complete DeepLift attributions for all 2,168 pairs |
+| `results/integrated_gradients_random_ppi_per_token_attributions.csv` | `results/integrated_gradients_random_ppi_per_token_attributions.csv` | 174 MB | Per-token IG attributions |
 
 ## Reproduction
 
@@ -100,6 +104,24 @@ python visualization/create_pair_attribution_heatmap.py
 - PyTorch >= 2.0.0
 - Captum (DeepLift, Integrated Gradients)
 - scipy, numpy, matplotlib, seaborn, pandas
+
+## Contributing (Co-authors)
+
+This repository accompanies a manuscript currently in preparation. If you are a co-author, please add your contributions to the appropriate sections:
+
+- **Data contributors**: Add input datasets (e.g., Y2H results, proteomics, structural data) to `data/` with a brief description in `documentation/data_provenance.md`
+- **Analysis contributors**: Add analysis scripts to the relevant `analysis/` subdirectory. Use relative paths (see existing scripts for the pattern)
+- **Figure contributors**: Add publication-ready figures to `figures/` and update `documentation/results_and_figure_legends.txt`
+- **AF3 structural analysis**: Add AlphaFold3 results or N-terminal ablation data to `af3_structural_analysis/`
+
+When adding files, please:
+1. Include a brief docstring at the top of any new script describing what it does
+2. Use relative paths — no hardcoded local or HPC paths
+3. Note any additional dependencies not in `requirements.txt`
+4. Update this README if you add a new analysis method or directory
+
+For large files (>50 MB), upload to the companion Hugging Face repository:
+https://huggingface.co/GreenGenomicsLab/Prochlorococcus_interactome_model_explainability
 
 ## License
 

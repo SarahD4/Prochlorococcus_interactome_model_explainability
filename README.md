@@ -1,19 +1,17 @@
-# Prochlorococcus Interactome Model Explainability
+# Explainability Analysis of ppiGPT Interaction Predictions in *Prochlorococcus* MED4
 
-Interpretability and explainability analysis of ppiGPT protein-protein interaction predictions in *Prochlorococcus* MED4.
-
-This repository contains all code, data, and results for the model interpretability analyses described in the accompanying manuscript.
+This repository contains code, data, and results for the model explainability analyses described in the accompanying manuscript. These analyses investigate what sequence features drive the predictions of ppiGPT, a protein-protein interaction model created by Kourosh Salehi-Ashtiani.
 
 ## Overview
 
-ppiGPT is a 12-layer, 12-head, 768-dimensional GPT-2 architecture (84.98M parameters) trained from scratch with a 29-token character-level vocabulary (20 amino acids + 9 special tokens) to predict protein-protein interactions. This repository provides the interpretability pipeline used to understand what sequence features drive the model's predictions.
+The explainability pipeline applies multiple interpretability methods to ppiGPT predictions across 1,084 experimentally validated Y2H interactions (PRS) and 1,084 randomly paired MED4 proteins (RRS). Methods include DeepLift attribution, Integrated Gradients, gradient attribution, Layer-wise Relevance Propagation, alanine substitution scanning, attention analysis, counterfactual sequence generation, linear probing, and AlphaFold3 N-terminal ablation experiments.
 
 ## Repository Structure
 
 ```
 .
-├── model/                          # ppiGPT model architecture
-│   └── model.py                    # GPT-2 based PPI prediction model (GPTConfig, GPT)
+├── model/                          # ppiGPT model architecture (created by K. Salehi-Ashtiani)
+│   └── model.py                    # GPT-2 architecture definition, included for reproducibility
 │
 ├── data/                           # Input datasets
 │   ├── formatted_real_PPIs.csv     # 1,084 Y2H-validated interactions (PRS)
@@ -67,20 +65,20 @@ ppiGPT is a 12-layer, 12-head, 768-dimensional GPT-2 architecture (84.98M parame
 | Mann-Whitney U | U = 1,018,862 | 1.64 x 10^-192 |
 | Cohen's d | 1.91 (large) | -- |
 
-## Model Checkpoint & Large Files
+## Large Files (Hugging Face)
 
-The trained ppiGPT checkpoint and large result files are hosted on Hugging Face:
+Large result files and the ppiGPT checkpoint (included for reproducibility) are hosted on Hugging Face:
 
 **https://huggingface.co/GreenGenomicsLab/Prochlorococcus_interactome_model_explainability**
 
 Download and place them locally before running analysis scripts:
 
-| HF Path | Local Path | Size | Description |
-|---------|------------|------|-------------|
-| `model/out_3e/ckpt.pt` | `model/out_3e/ckpt.pt` | 1.0 GB | ppiGPT model checkpoint (84.98M params, 3 epochs) |
-| `model/data/meta.pkl` | `model/data/meta.pkl` | 343 B | Tokenizer metadata (29-token vocabulary) |
-| `results/deeplift_motif_analysis_results.pkl` | `results/deeplift_motif_analysis_results.pkl` | 78 MB | Complete DeepLift attributions for all 2,168 pairs |
-| `results/integrated_gradients_random_ppi_per_token_attributions.csv` | `results/integrated_gradients_random_ppi_per_token_attributions.csv` | 174 MB | Per-token IG attributions |
+| HF Path | Size | Description |
+|---------|------|-------------|
+| `results/deeplift_motif_analysis_results.pkl` | 78 MB | DeepLift attribution scores for all 2,168 protein pairs |
+| `results/integrated_gradients_random_ppi_per_token_attributions.csv` | 174 MB | Per-token IG attributions for 1,084 RRS pairs |
+| `model/out_3e/ckpt.pt` | 1.0 GB | ppiGPT checkpoint (K. Salehi-Ashtiani), included for reproducibility |
+| `model/data/meta.pkl` | 343 B | Tokenizer metadata |
 
 ## Reproduction
 

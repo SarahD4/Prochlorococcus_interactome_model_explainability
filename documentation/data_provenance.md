@@ -9,7 +9,7 @@ data/formatted_random_PPIs.csv (1,084 random MED4 pairs)
           ▼
 analysis/deeplift/captum_deeplift_proper_analysis.py
   Method: Captum DeepLift (reference-based backpropagation)
-  Model:  ppiGPT (GPT-2, 12L/12H/768D, ~85M params)
+  Model:  ppiGPT (GPT-2, 12L/12H/768D, ~85M params; created by K. Salehi-Ashtiani)
   Ckpt:   model/out_3e/ckpt.pt (hosted on HuggingFace)
   Date:   2025-06-29
           │

@@ -14,7 +14,6 @@ Key features:
 - Includes detailed logging and error handling
 - All outputs include "deeplift_motif" in filenames for clear identification
 
-Author: PPI Analysis Pipeline
 Date: 2025-06-29
 """
 

@@ -21,10 +21,6 @@ import pandas as pd
 from datetime import datetime
 from typing import Dict, List, Tuple, Optional
 
-# Add parent to path for imports
-sys.path.insert(0, str(Path(__file__).parent))
-
-from core.confidence_metrics import ConfidenceScores, ConfidenceMetrics
 
 
 def load_confidence_data(conf_file: Path) -> Dict:

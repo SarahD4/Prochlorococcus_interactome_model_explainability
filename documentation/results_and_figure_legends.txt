@@ -1,13 +1,12 @@
 RESULTS AND FIGURE LEGENDS: DeepLift Attribution Analysis of ppiGPT
 =====================================================================
-Generated: 2026-01-26
-Source figures: DeepLift-gptPPI-FIGURE.pdf, DeepLift-gptPPI-sixPanel.pdf
+Source figures: figures/DeepLift-gptPPI-FIGURE.pdf, figures/DeepLift-gptPPI-sixPanel.pdf
 Generating scripts:
-  - /Users/drn2/Documents/CYANO-INTERACTOME/sureLLM-based/create_pair_attribution_heatmap.py
-  - /Users/drn2/Documents/CYANO-INTERACTOME/sureLLM-based/twoGuardsGPTexplainability/create_explainability_dashboard.py
-  - /Users/drn2/Documents/CYANO-INTERACTOME/sureLLM-based/full_deeplift_analysis.py
-  - /Users/drn2/Documents/CYANO-INTERACTOME/sureLLM-based/deeplift_motif_discovery_full.py
-Data source: deeplift_motif_analysis_20250629_091944/deeplift_motif_analysis_results.pkl
+  - visualization/create_pair_attribution_heatmap.py
+  - visualization/create_explainability_dashboard.py
+  - analysis/deeplift/captum_deeplift_proper_analysis.py
+  - analysis/deeplift/deeplift_motif_discovery_full.py
+Data source: results/deeplift_motif_analysis_results.pkl (hosted on HuggingFace)
 =====================================================================
 
 

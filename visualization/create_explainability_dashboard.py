@@ -19,7 +19,7 @@ import os
 
 # Add visualization module to path
 sys.path.insert(0, os.path.dirname(__file__))
-from visualization.figure_config import setup_publication_style, BLACKBODY_COLORS, DIVERGING_COLORS
+from figure_config import setup_publication_style, BLACKBODY_COLORS, DIVERGING_COLORS
 
 # Setup publication style
 setup_publication_style()

@@ -5,7 +5,7 @@ Finds minimal sequence changes that flip interaction predictions.
 
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), 'ppiGPT_MED4_solo'))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'model'))
 
 import torch
 import torch.nn.functional as F
@@ -504,9 +504,9 @@ def main():
     import csv
     
     # Model paths
-    out_dir = 'ppiGPT_MED4_solo/out_3e'
+    out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'model', 'out_3e')
     model_path = os.path.join(out_dir, 'ckpt.pt')
-    meta_path = 'ppiGPT_MED4_solo/data/shakespeare_char/meta.pkl'
+    meta_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'model', 'data', 'meta.pkl')
     
     # Load model
     print("Loading model...")
@@ -533,7 +533,7 @@ def main():
     generator = CounterfactualGenerator(model, meta_path)
     
     # Load some interacting protein pairs from MED4_Int file
-    int_file = 'ppiGPT_MED4_solo/MED4_Int_100pairs_prompts.txt'
+    int_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'data', 'MED4_Int_100pairs_prompts.txt')
     protein_pairs = []
     
     print("\nLoading interacting protein pairs...")

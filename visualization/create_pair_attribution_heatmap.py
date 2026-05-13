@@ -16,8 +16,8 @@ from matplotlib.colors import LinearSegmentedColormap
 import sys
 import os
 
-sys.path.insert(0, 'twoGuardsGPTexplainability')
-from visualization.figure_config import setup_publication_style, BLACKBODY_COLORS
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from figure_config import setup_publication_style, BLACKBODY_COLORS
 
 setup_publication_style()
 
@@ -232,7 +232,7 @@ fig.text(0.5, 0.955,
         ha='center', fontsize=4, style='italic')
 
 # Save
-output_dir = 'twoGuardsGPTexplainability/figures'
+output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'figures')
 os.makedirs(output_dir, exist_ok=True)
 output_path = f'{output_dir}/deeplift_pair_attribution_heatmap'
 

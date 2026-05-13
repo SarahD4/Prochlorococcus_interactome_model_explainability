@@ -5,7 +5,7 @@ Probes internal representations to understand what biological properties the mod
 
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), 'ppiGPT_MED4_solo'))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'model'))
 
 import torch
 import torch.nn as nn
@@ -352,9 +352,9 @@ def main():
     import csv
     
     # Model paths
-    out_dir = 'ppiGPT_MED4_solo/out_3e'  # Using the available checkpoint
+    out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'model', 'out_3e')  # Using the available checkpoint
     model_path = os.path.join(out_dir, 'ckpt.pt')
-    meta_path = 'ppiGPT_MED4_solo/data/shakespeare_char/meta.pkl'
+    meta_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'model', 'data', 'meta.pkl')
     
     # Load model
     print("Loading model...")
@@ -381,7 +381,7 @@ def main():
     analyzer = ProbeAnalyzer(model, meta_path)
     
     # Load real protein pairs from MED4 dataset
-    csv_path = 'ppiGPT_MED4_solo/MED4-PPIs-low-confidence_ppiGPLM_cleaned2_prompts.csv'
+    csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'data', 'MED4-PPIs-low-confidence_ppiGPLM_cleaned2_prompts.csv')
     protein_pairs = []
     
     print("Loading protein pairs from dataset...")

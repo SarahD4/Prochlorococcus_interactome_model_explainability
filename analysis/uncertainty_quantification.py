@@ -5,7 +5,7 @@ Estimates prediction uncertainty using multiple approaches.
 
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), 'ppiGPT_MED4_solo'))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'model'))
 
 import torch
 import torch.nn as nn
@@ -542,9 +542,9 @@ def main():
     import csv
     
     # Model paths
-    out_dir = 'ppiGPT_MED4_solo/out_3e'
+    out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'model', 'out_3e')
     model_path = os.path.join(out_dir, 'ckpt.pt')
-    meta_path = 'ppiGPT_MED4_solo/data/shakespeare_char/meta.pkl'
+    meta_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'model', 'data', 'meta.pkl')
     
     # Load model
     print("Loading model...")
@@ -575,7 +575,7 @@ def main():
     labels = []
     
     # Load interacting pairs
-    int_file = 'ppiGPT_MED4_solo/MED4_Int_100pairs_prompts.txt'
+    int_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'MED4_Int_100pairs_prompts.txt')
     with open(int_file, 'r') as f:
         lines = f.readlines()
         for i, line in enumerate(lines[:10]):
@@ -587,7 +587,7 @@ def main():
                 labels.append(1)
     
     # Load non-interacting pairs
-    rnd_file = 'ppiGPT_MED4_solo/MED4_100_RND_prompts.txt'
+    rnd_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'MED4_100_RND_prompts.txt')
     with open(rnd_file, 'r') as f:
         lines = f.readlines()
         for i, line in enumerate(lines[:10]):

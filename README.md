@@ -33,7 +33,6 @@ ppiGPT is a 12-layer, 12-head, 768-dimensional GPT-2 architecture (84.98M parame
 │
 ├── af3_structural_analysis/        # AlphaFold3 N-terminal ablation experiments
 │   ├── submit_to_af3_batch.py      # AF3 batch submission
-│   ├── analyze_af3_results.py      # AF3 output parsing
 │   └── analyze_med4_results_20251011.py  # ipTM analysis of N20A ablations
 │
 ├── visualization/                  # Figure generation

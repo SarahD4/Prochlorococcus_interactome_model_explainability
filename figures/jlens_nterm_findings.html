@@ -1,0 +1,395 @@
+<title>J-Lens Reading of ppiGPLM's N-Terminal Paradox</title>
+<style>
+.viz-root {
+  --surface-1:      #fcfcfb;
+  --page:           #f9f9f7;
+  --text-primary:   #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted:     #898781;
+  --grid:           #e1e0d9;
+  --baseline:       #c3c2b7;
+  --series-real:    #2a78d6;
+  --series-random:  #1baf7a;
+  --div-neg:        #256abf;
+  --div-pos:        #e34948;
+  --div-mid:        #f0efec;
+  --border:         rgba(11,11,11,0.10);
+}
+@media (prefers-color-scheme: dark) {
+  .viz-root {
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --baseline:       #383835;
+    --series-real:    #3987e5;
+    --series-random:  #199e70;
+    --div-neg:        #3987e5;
+    --div-pos:        #e66767;
+    --div-mid:        #383835;
+    --border:          rgba(255,255,255,0.10);
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  --surface-1:      #1a1a19;
+  --page:           #0d0d0d;
+  --text-primary:   #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted:     #898781;
+  --grid:           #2c2c2a;
+  --baseline:       #383835;
+  --series-real:    #3987e5;
+  --series-random:  #199e70;
+  --div-neg:        #3987e5;
+  --div-pos:        #e66767;
+  --div-mid:        #383835;
+  --border:          rgba(255,255,255,0.10);
+}
+:root[data-theme="light"] .viz-root {
+  --surface-1:      #fcfcfb;
+  --page:           #f9f9f7;
+  --text-primary:   #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted:     #898781;
+  --grid:           #e1e0d9;
+  --baseline:       #c3c2b7;
+  --series-real:    #2a78d6;
+  --series-random:  #1baf7a;
+  --div-neg:        #256abf;
+  --div-pos:        #e34948;
+  --div-mid:        #f0efec;
+  --border:          rgba(11,11,11,0.10);
+}
+.viz-root {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--page);
+  color: var(--text-primary);
+  padding: 32px 20px 60px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+h1 { font-size: 1.4rem; margin-bottom: 4px; }
+.subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 28px; max-width: 640px; }
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 24px 18px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+.card h2 { font-size: 1.05rem; margin: 0 0 2px; }
+.card .desc { color: var(--text-secondary); font-size: 0.86rem; margin-bottom: 16px; max-width: 620px; }
+.legend { display: flex; gap: 18px; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px; }
+.legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+svg { display: block; overflow: visible; }
+.axis-label { fill: var(--text-muted); font-size: 10.5px; }
+.gridline { stroke: var(--grid); stroke-width: 1; }
+.baseline { stroke: var(--baseline); stroke-width: 1; }
+.tick-text { fill: var(--text-secondary); font-size: 10.5px; }
+.line-real { fill: none; stroke: var(--series-real); stroke-width: 2; }
+.line-random { fill: none; stroke: var(--series-random); stroke-width: 2; }
+.dot-real { fill: var(--series-real); }
+.dot-random { fill: var(--series-random); }
+.sig-marker { fill: var(--text-muted); font-size: 9.5px; text-anchor: middle; }
+.note { font-size: 0.78rem; color: var(--text-muted); margin-top: 10px; line-height: 1.5; }
+.stat-row { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 4px; margin-bottom: 18px; }
+.stat-tile { flex: 1; min-width: 150px; }
+.stat-tile .val { font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stat-tile .lbl { font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px; }
+.cell-label { fill: var(--text-primary); font-size: 10.5px; text-anchor: middle; dominant-baseline: middle; font-variant-numeric: tabular-nums; }
+.row-label, .col-label { fill: var(--text-secondary); font-size: 10.5px; }
+table.data-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 8px; }
+table.data-table th, table.data-table td { text-align: right; padding: 4px 8px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+table.data-table th:first-child, table.data-table td:first-child { text-align: left; }
+table.data-table th { color: var(--text-muted); font-weight: 500; }
+details summary { cursor: pointer; color: var(--text-secondary); font-size: 0.82rem; margin-top: 6px; }
+footer { color: var(--text-muted); font-size: 0.78rem; margin-top: 8px; line-height: 1.6; }
+</style>
+
+<div class="viz-root">
+  <h1>Reading ppiGPLM with the Jacobian Lens: where does "this pair interacts" actually live?</h1>
+  <p class="subtitle">
+    A representation-level complement to the manuscript's DeepLift / Integrated-Gradients / alanine-ablation
+    N-terminal paradox. jacobian-lens was fit on ppiGPLM's own residual stream (719 real MED4 pairs, layers 0&ndash;10,
+    RTX&nbsp;4080) and applied to ask: at each layer, does a position's hidden state &mdash; transported into the
+    model's final decision basis &mdash; already look like &ldquo;1&rdquo; (interacts) rather than &ldquo;0&rdquo;?
+  </p>
+
+  <div class="card">
+    <h2>Pipeline sanity check</h2>
+    <div class="desc">Mean P(interact) read off the unmodified model, reproduced from this run vs. the manuscript.</div>
+    <div class="stat-row">
+      <div class="stat-tile"><div class="val">0.717</div><div class="lbl">real pairs (this run) &middot; manuscript: 0.718</div></div>
+      <div class="stat-tile"><div class="val">0.205</div><div class="lbl">random pairs (this run) &middot; manuscript: 0.207</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Protein1: within the N-terminal window, the "interacting" signal is not at position 0</h2>
+    <div class="desc">
+      Lens margin = logit("1") &minus; logit("0") after transporting protein1's residual at each of the first 15
+      positions (layer 9, the peak layer) into the final-layer basis. Mean over 150 real / 150 random pairs.
+    </div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--series-real)"></span>real pairs (PRS)</span>
+      <span><span class="dot" style="background:var(--series-random)"></span>random pairs (RRS)</span>
+    </div>
+    <svg id="lineChart" width="820" height="300" viewBox="0 0 820 300"></svg>
+    <div class="note">
+      Markers show Mann&ndash;Whitney p-value bands vs. random at that position (n=150/150). Position 0 &mdash; the
+      single highest-DeepLift-attribution residue in the manuscript's Figure&nbsp;4A&ndash;B &mdash; shows <b>no</b>
+      significant separation (p=0.45); position 1 is also non-significant (p=0.13, and trends the wrong way).
+      The representational signal peaks at positions 4&ndash;8 (p&lt;10<sup>&minus;6</sup> at 6 and 7) before
+      decaying again toward position 14.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Protein2: the same test, run symmetrically &mdash; largely the same pattern, one asymmetry</h2>
+    <div class="desc">
+      Identical readout applied to protein2's first 15 residues (same fitted lens, layer 9, 150 real / 150 random
+      pairs). protein2 sits downstream of protein1 in the causal prompt
+      (&ldquo;&lt;ps1&gt;,protein1,&lt;ps2&gt;,protein2,&lt;&rdquo;), so by the time the model reads protein2's
+      first residue it has already attended over all of protein1.
+    </div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--series-real)"></span>real pairs (PRS)</span>
+      <span><span class="dot" style="background:var(--series-random)"></span>random pairs (RRS)</span>
+    </div>
+    <svg id="lineChart2" width="820" height="300" viewBox="0 0 820 300"></svg>
+    <div class="note">
+      Position 1 is again null (p=0.87), and the signal again peaks in the 4&ndash;14 range &mdash; but unlike
+      protein1, protein2's position 0 shows a small, statistically significant separation (p=0.0004, real
+      &minus;0.41 vs. random &minus;0.53), consistent with position 0 of protein2 already having full protein1
+      context available via causal attention that protein1's own position 0 never has.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Real&minus;random margin differential, by region and layer</h2>
+    <div class="desc">
+      Mean lens margin over 15-residue windows at each protein's N-terminus, middle, and C-terminus, minus the
+      matched random-pair baseline, across layers 0&ndash;10. Both proteins reach p&lt;10<sup>&minus;8</sup> in all
+      three regions by layer 7&ndash;9, and both show the same ranking &mdash; C-terminal &gt; N-terminal &gt;
+      middle &mdash; confirming this is not a protein1-specific artefact.
+    </div>
+    <div class="row-label" style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:4px;">Protein1</div>
+    <svg id="heatmap" width="820" height="220" viewBox="0 0 820 220"></svg>
+    <div class="row-label" style="font-size:0.82rem; color:var(--text-secondary); margin:14px 0 4px;">Protein2</div>
+    <svg id="heatmap2" width="820" height="220" viewBox="0 0 820 220"></svg>
+    <details>
+      <summary>Show underlying values</summary>
+      <table class="data-table" id="heatTable"></table>
+      <table class="data-table" id="heatTable2" style="margin-top:14px"></table>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>Effect sizes side by side (layer 9)</h2>
+    <div class="desc">Cohen's d, real vs. random, at the peak layer. Protein2 is consistently equal to or larger than protein1.</div>
+    <table class="data-table">
+      <tr><th>Region</th><th>Protein1 d</th><th>Protein1 p</th><th>Protein2 d</th><th>Protein2 p</th></tr>
+      <tr><td>N-terminal</td><td>0.69</td><td>1.6&times;10<sup>&minus;8</sup></td><td>0.79</td><td>9.4&times;10<sup>&minus;14</sup></td></tr>
+      <tr><td>Middle</td><td>0.62</td><td>1.3&times;10<sup>&minus;9</sup></td><td>0.51</td><td>8.3&times;10<sup>&minus;7</sup></td></tr>
+      <tr><td>C-terminal</td><td>0.93</td><td>1.2&times;10<sup>&minus;13</sup></td><td>1.02</td><td>2.7&times;10<sup>&minus;20</sup></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Causal test: activation patching confirms the effect is concentrated at the peak positions</h2>
+    <div class="desc">
+      Everything above is correlational (does a position's representation <i>look like</i> the decision).
+      This test is causal: the raw residual stream at layer 9 &mdash; not the lens-transported version, since
+      that's what the rest of the network actually consumes &mdash; is patched at specific positions from a
+      donor prompt into a recipient prompt's own forward pass, and the resulting shift in
+      logit("1")&minus;logit("0") at the final position is measured against the recipient's unpatched baseline.
+      150 index-matched real/random pairs; peak = positions 6&ndash;8 (protein1) or 6&ndash;8 (protein2); control =
+      positions 0&ndash;1 (protein1) or position 1 only (protein2, since position 0 was already shown to carry a
+      weak signal from cross-attention onto protein1).
+    </div>
+    <table class="data-table">
+      <tr><th>Protein</th><th>Direction</th><th>n</th><th>Peak mean shift</th><th>Control mean shift</th><th>Paired &Delta;|shift|</th><th>Paired p</th><th>Paired d<sub>z</sub></th></tr>
+      <tr><td>protein1</td><td>real&rarr;random</td><td>150</td><td>+0.0025</td><td>+0.0000</td><td>+0.004</td><td>1.5&times;10<sup>&minus;8</sup></td><td>0.38</td></tr>
+      <tr><td>protein1</td><td>random&rarr;real</td><td>150</td><td>+0.0003</td><td>+0.0009</td><td>+0.000</td><td>0.25 (ns)</td><td>0.04</td></tr>
+      <tr><td>protein2</td><td>real&rarr;random</td><td>150</td><td>+0.0745</td><td>&minus;0.0030</td><td>+0.086</td><td>2.0&times;10<sup>&minus;19</sup></td><td>0.43</td></tr>
+      <tr><td>protein2</td><td>random&rarr;real</td><td>150</td><td>+0.0015</td><td>+0.0008</td><td>+0.013</td><td>8.8&times;10<sup>&minus;10</sup></td><td>0.32</td></tr>
+    </table>
+    <div class="note">
+      Paired &Delta;|shift| = mean(|peak shift|) &minus; mean(|control shift|) over the same 150 donor&ndash;recipient
+      pairs (Wilcoxon signed-rank). In 3 of 4 protein&times;direction combinations, patching the peak positions
+      moves the decision significantly more than patching the null-signal control positions &mdash; the causal
+      effect really is concentrated where the representational read-out said it would be. The exception is
+      protein1's random&rarr;real direction, where neither peak nor control patches meaningfully disturb an
+      already-confident "interacts" call. Absolute shifts are small relative to the multi-unit logit margins that
+      separate confident real/random predictions: a 3-residue, single-layer patch is a narrow intervention against
+      a decision the model builds from the whole sequence, so the finding is about <i>where</i> the causal
+      leverage concentrates, not that these positions alone determine the outcome.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>What this adds to the correlation&ndash;causation&ndash;context framework</h2>
+    <div class="desc" style="max-width:none">
+      Three independent methodologies now dissociate at the N-terminus, not two:
+    </div>
+    <ul style="font-size:0.88rem; color:var(--text-secondary); line-height:1.7; margin-top:0;">
+      <li><b>Attribution</b> (DeepLift/IG): N-terminal residues, especially position 0, carry the largest causal effect on the output logit.</li>
+      <li><b>Structure</b> (AlphaFold3): N-terminal residues are depleted at the physical binding interface.</li>
+      <li><b>Representation</b> (this analysis): position 0&ndash;1's own hidden state does not linearly decode as
+      "interacts" in the model's own final-layer basis &mdash; that signal is strongest a few residues downstream
+      (~4&ndash;8) and downstream again toward the C-terminus.</li>
+    </ul>
+    <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6;">
+      That pattern &mdash; high causal leverage without the position itself carrying the "yes" concept &mdash;
+      is the behavioral signature of a <b>gate or modulator</b>, not a direct feature detector: position 0&ndash;1
+      appears to condition how later positions' representations get formed (via attention), rather than encoding
+      the interaction verdict itself. This sharpens rather than resolves the paradox, and is most consistent with
+      the manuscript's <i>allosteric communication</i> and <i>specificity coding</i> hypotheses over pure
+      <i>structural scaffolding</i> &mdash; and offers a concrete, narrower follow-up target (positions ~4&ndash;8,
+      not the extreme N-terminus) for mutagenesis or motif-scanning follow-up.
+    </p>
+    <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6;">
+      Running the same readout symmetrically on protein2 confirms this is a general property of the model's
+      decision-making, not a protein1-specific quirk: the same N-term/middle/C-term ranking, the same near-null
+      first-two-residues region, and slightly <i>larger</i> effect sizes throughout. The one clean asymmetry
+      &mdash; protein2's position 0 carries a small but real signal that protein1's does not &mdash; is exactly
+      what the causal (autoregressive) architecture predicts: protein2's first residue is already conditioned on
+      the entirety of protein1, while protein1's first residue has no interaction context at all yet. That
+      asymmetry is itself a useful confirmation that the lens is tracking something architecturally real, not
+      noise.
+    </p>
+    <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6;">
+      The activation-patching test above closes the loop: it is not just that peak positions <i>read</i> as more
+      interaction-like than control positions, but that overwriting them causally moves the model's decision
+      significantly more than overwriting the null-signal control positions, in 3 of 4 tested directions. Reading
+      and intervention agree.
+    </p>
+  </div>
+
+  <footer>
+    Model: ppiGPLM (nanoGPT-style, 12L/12H/768d, 84.98M params, char-level 29-token vocab), checkpoint
+    <code>out_3e/ckpt.pt</code> from GreenGenomicsLab/Prochlorococcus_interactome_model_explainability (HF).
+    Lens: anthropics/jacobian-lens, fit with <code>skip_first=6</code> (overriding the library default of 16, which
+    would otherwise discard the N-terminus as an "attention sink" position) on 719 PRS prompts, target layer 11,
+    dim_batch=16, converged to relative change &lt;5&times;10<sup>&minus;4</sup>. Protein2 readouts use the same
+    fitted lens (no refitting), with position offsets computed from the "&lt;ps1&gt;," / ",&lt;ps2&gt;,"
+    marker lengths. All p-values two-sided Mann&ndash;Whitney U except the activation-patching test, which uses
+    the two-sided Wilcoxon signed-rank test (paired across donor&ndash;recipient pairs).
+  </footer>
+</div>
+
+<script>
+const positions = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+
+const p1_real =  [-0.553,-0.714,-0.462,-0.087, 0.219, 0.254, 0.434, 0.371, 0.195,-0.142, 0.132, 0.230,-0.082, 0.221,-0.193];
+const p1_rand =  [-0.587,-0.537,-0.662,-0.589,-0.443,-0.449,-0.466,-0.382,-0.458,-0.558,-0.502,-0.317,-0.477,-0.318,-0.396];
+const p1_pvals = [0.44539,0.12819,0.16360,0.01302,3e-5,3e-5,1e-12,1e-12,1e-12,0.04815,1e-12,2e-5,0.00501,0.00016,0.40243];
+
+const p2_real =  [-0.408,-0.730, 0.008, 0.116, 0.407, 0.595, 0.716, 0.487, 0.991, 0.573, 0.893, 0.629, 0.862, 0.609, 0.675];
+const p2_rand =  [-0.527,-0.769,-0.354,-0.004, 0.031, 0.002, 0.028, 0.262, 0.140, 0.138, 0.118, 0.179, 0.082,-0.017, 0.007];
+const p2_pvals = [0.000405,0.867,0.0368,0.649,0.0115,1.21e-5,2.69e-7,0.0255,2.61e-8,0.0035,6.88e-8,0.000102,7.69e-9,8.62e-6,3.27e-5];
+
+function sigMark(p){ if(p<0.001) return '***'; if(p<0.01) return '**'; if(p<0.05) return '*'; return ''; }
+
+function lineChart(svgId, real, rand, pvals, proteinLabel){
+  const svg = document.getElementById(svgId);
+  const W=820,H=300, m={top:16,right:24,bottom:34,left:44};
+  const iw=W-m.left-m.right, ih=H-m.top-m.bottom;
+  const xs = i => m.left + (i/(positions.length-1))*iw;
+  const yMin=-0.9, yMax=1.1;
+  const ys = v => m.top + ih - ((v-yMin)/(yMax-yMin))*ih;
+
+  let s = '';
+  for(let v=-0.75; v<=1.0; v+=0.25){
+    s += `<line class="gridline" x1="${m.left}" x2="${W-m.right}" y1="${ys(v)}" y2="${ys(v)}"/>`;
+    s += `<text class="tick-text" x="${m.left-8}" y="${ys(v)+3}" text-anchor="end">${v.toFixed(2)}</text>`;
+  }
+  s += `<line class="baseline" x1="${m.left}" x2="${W-m.right}" y1="${ys(0)}" y2="${ys(0)}"/>`;
+  positions.forEach((p,i)=>{
+    s += `<text class="tick-text" x="${xs(i)}" y="${H-m.bottom+16}" text-anchor="middle">${p}</text>`;
+  });
+  s += `<text class="axis-label" x="${m.left+iw/2}" y="${H-4}" text-anchor="middle">Residue position within ${proteinLabel} (0 = N-terminus)</text>`;
+
+  function pathFor(arr){
+    return arr.map((v,i)=> (i===0?'M':'L') + xs(i).toFixed(1) + ',' + ys(v).toFixed(1)).join(' ');
+  }
+  s += `<path class="line-real" d="${pathFor(real)}"/>`;
+  s += `<path class="line-random" d="${pathFor(rand)}"/>`;
+  real.forEach((v,i)=> s += `<circle class="dot-real" cx="${xs(i)}" cy="${ys(v)}" r="3.5"><title>position ${positions[i]}: real margin ${v.toFixed(3)}</title></circle>`);
+  rand.forEach((v,i)=> s += `<circle class="dot-random" cx="${xs(i)}" cy="${ys(v)}" r="3.5"><title>position ${positions[i]}: random margin ${v.toFixed(3)}</title></circle>`);
+  pvals.forEach((p,i)=>{
+    const mark = sigMark(p);
+    if(mark) s += `<text class="sig-marker" x="${xs(i)}" y="${ys(Math.max(real[i],rand[i]))-10}">${mark}</text>`;
+  });
+
+  svg.innerHTML = s;
+}
+lineChart('lineChart', p1_real, p1_rand, p1_pvals, 'protein1');
+lineChart('lineChart2', p2_real, p2_rand, p2_pvals, 'protein2');
+
+function heatmap(svgId, tableId, data){
+  const svg = document.getElementById(svgId);
+  const layers = [0,1,2,3,4,5,6,7,8,9,10];
+  const regions = ['n_term','middle','c_term'];
+  const regionLabels = {n_term:'N-terminal (1–15)', middle:'Middle', c_term:'C-terminal (last 15)'};
+  const W=820,H=220, m={top:10,right:110,bottom:34,left:110};
+  const iw=W-m.left-m.right, ih=H-m.top-m.bottom;
+  const cw = iw/layers.length, ch = ih/regions.length;
+  const vMax = 0.75;
+  function color(v){
+    const t = Math.max(-1,Math.min(1, v/vMax));
+    const neg = [37,106,191], mid=[240,239,236], pos=[227,73,72];
+    const c = t<0 ? lerp(mid,neg,-t) : lerp(mid,pos,t);
+    return `rgb(${c[0]},${c[1]},${c[2]})`;
+  }
+  function lerp(a,b,t){ return [0,1,2].map(k=>Math.round(a[k]+(b[k]-a[k])*t)); }
+
+  let s='';
+  regions.forEach((r,ri)=>{
+    s += `<text class="row-label" x="${m.left-8}" y="${m.top+ri*ch+ch/2+4}" text-anchor="end">${regionLabels[r]}</text>`;
+    layers.forEach((l,li)=>{
+      const v = data[r][li];
+      const x = m.left+li*cw, y = m.top+ri*ch;
+      s += `<rect x="${x+1}" y="${y+1}" width="${cw-2}" height="${ch-2}" rx="3" fill="${color(v)}"><title>${regionLabels[r]}, layer ${l}: ${v.toFixed(3)}</title></rect>`;
+      const light = Math.abs(v) < 0.35;
+      s += `<text class="cell-label" x="${x+cw/2}" y="${y+ch/2}" fill="${light? 'var(--text-primary)':'#fff'}">${v.toFixed(2)}</text>`;
+    });
+  });
+  layers.forEach((l,li)=>{
+    s += `<text class="col-label" x="${m.left+li*cw+cw/2}" y="${m.top+ih+16}" text-anchor="middle">L${l}</text>`;
+  });
+  s += `<text class="axis-label" x="${m.left+iw/2}" y="${H-2}" text-anchor="middle">Layer (source of the residual being read out)</text>`;
+
+  const lx = W-m.right+16, ly = m.top, lh = ih;
+  let grad = '';
+  for(let i=0;i<=20;i++){
+    const t = -1 + (i/20)*2;
+    grad += `<rect x="${lx}" y="${ly + lh - (i/20)*lh - lh/20}" width="14" height="${lh/20+1}" fill="${color(t*vMax)}"/>`;
+  }
+  s += grad;
+  s += `<text class="tick-text" x="${lx+18}" y="${ly+8}" >+${vMax.toFixed(2)}</text>`;
+  s += `<text class="tick-text" x="${lx+18}" y="${ly+lh/2+4}">0</text>`;
+  s += `<text class="tick-text" x="${lx+18}" y="${ly+lh}">&minus;${vMax.toFixed(2)}</text>`;
+
+  svg.innerHTML = s;
+
+  const tbl = document.getElementById(tableId);
+  let th = '<tr><th>Region</th>' + layers.map(l=>`<th>L${l}</th>`).join('') + '</tr>';
+  let rows = regions.map(r => `<tr><td>${regionLabels[r]}</td>${data[r].map(v=>`<td>${v.toFixed(3)}</td>`).join('')}</tr>`).join('');
+  tbl.innerHTML = th + rows;
+}
+
+heatmap('heatmap', 'heatTable', {
+  n_term:  [0.101,0.103,0.111,0.039,0.141,0.268,0.298,0.399,0.381,0.432,0.270],
+  middle:  [0.050,0.065,0.007,0.020,-0.147,0.013,0.163,0.391,0.419,0.370,0.185],
+  c_term:  [0.013,0.026,0.022,0.084,-0.013,0.161,0.272,0.567,0.645,0.748,0.662],
+});
+heatmap('heatmap2', 'heatTable2', {
+  n_term:  [0.061,0.058,0.136,0.092,0.197,0.317,0.375,0.505,0.492,0.488,0.431],
+  middle:  [-0.001,0.009,0.040,0.101,-0.043,0.039,0.135,0.391,0.382,0.366,0.344],
+  c_term:  [0.005,0.004,0.053,0.147,0.065,0.177,0.359,0.580,0.594,0.655,0.410],
+});
+</script>

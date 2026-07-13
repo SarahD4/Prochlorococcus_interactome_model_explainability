@@ -231,6 +231,63 @@ footer { color: var(--text-muted); font-size: 0.78rem; margin-top: 8px; line-hei
   </div>
 
   <div class="card">
+    <h2>Attention-sink control: does the ~4&ndash;8 signal track content, or just position?</h2>
+    <div class="desc">
+      The most deflationary reading of everything above: positions ~4&ndash;8 might just be "a few residues past
+      an uninformative start-of-sequence zone," independent of what's actually there. Test: prepend 50 random
+      residues (seed 42) to both proteins in a curated MED4-100 PRS/RRS set and see whether the signal follows
+      the true N-terminus to its new location (~54&ndash;58) or stays anchored at the new absolute position 0&ndash;1.
+      Same fitted lens, layer 9, no refitting.
+    </div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--series-real)"></span>baseline pattern (positions 0&ndash;14)</span>
+      <span><span class="dot" style="background:var(--series-random)"></span>+50 pattern (positions 50&ndash;64, plotted at matched relative position)</span>
+    </div>
+    <svg id="attnSinkChart" width="820" height="260" viewBox="0 0 820 260"></svg>
+    <div class="note">
+      Effect size (Cohen's d, real vs. random) at each of the 15 matched relative positions, baseline vs. the
+      +50-shifted analog. The two curves are significantly correlated &mdash; Pearson r=0.668 (p=0.0064), Spearman
+      &rho;=0.714 (p=0.0028), n=15 &mdash; including the specific dip at relative positions 0&ndash;1 and 14
+      reappearing at the shifted location. The pattern moves with the content rather than staying fixed at the
+      sequence start, though attenuated throughout (mean d over positions 4&ndash;8: 0.46 baseline vs. 0.11
+      shifted) &mdash; consistent with the mild AUC/probability degradation the +50 prefix causes (below).
+      <br><br>
+      One caveat that has to be stated precisely: matched PRS/RRS rows share the <i>same</i> random 50-residue
+      prefix, and ppiGPLM is strictly causal, so positions 0&ndash;49 receive identical input in matched
+      PRS+50/RRS+50 rows and are mechanically guaranteed to produce identical activations there &mdash; real and
+      random margins came back equal to three decimal places at every position 0&ndash;49 (all p&gt;0.9). That
+      region is an architectural certainty of this design, not evidence either way about attention sinks; the
+      informative comparison is positions 50+, shown above.
+    </div>
+    <table class="data-table" style="margin-top:14px">
+      <tr><th>Readout (layer 9)</th><th>RRS</th><th>RRS+50</th></tr>
+      <tr><td>Prefix region (new, no baseline analog)</td><td>&mdash;</td><td>&minus;0.503</td></tr>
+      <tr><td>N-terminal (true biological)</td><td>&minus;0.332</td><td>&minus;0.223</td></tr>
+      <tr><td>Middle</td><td>&minus;0.221</td><td>&minus;0.137</td></tr>
+      <tr><td>C-terminal</td><td>&minus;0.193</td><td>&minus;0.127</td></tr>
+    </table>
+    <div class="note">
+      Coarse region&times;layer readout on RRS alone vs. RRS+50 alone (not a real-vs-random contrast &mdash; this
+      is how "does not interact" is itself represented, and whether +50 disturbs it). All regions stay
+      negative and in the same order under the prefix, just somewhat weakened; the new prefix region's own
+      margin (&minus;0.503) sits comfortably within the range of ordinary negative-pair margins rather than
+      reading as a distinctive attention-sink signature.
+    </div>
+    <table class="data-table" style="margin-top:14px">
+      <tr><th></th><th>Baseline</th><th>+50 prefix (seed 42)</th></tr>
+      <tr><td>AUC-ROC (final checkpoint, from provided trajectories)</td><td>&asymp;0.952</td><td>&asymp;0.925</td></tr>
+      <tr><td>LES-AUC</td><td>0.9054</td><td>0.8621</td></tr>
+      <tr><td>Mean P(interact), PRS (this MED4-100 set)</td><td>0.606</td><td>0.399</td></tr>
+      <tr><td>Mean P(interact), RRS (this MED4-100 set)</td><td>0.189</td><td>0.169</td></tr>
+    </table>
+    <div class="note">
+      A ~0.03 AUC drop is a mild, not catastrophic, degradation &mdash; and it falls almost entirely on
+      positives (PRS probability drops by 0.207) rather than negatives (RRS drops by only 0.020), i.e.
+      calibration shifts more than rank-ordering.
+    </div>
+  </div>
+
+  <div class="card">
     <h2>What this adds to the correlation&ndash;causation&ndash;context framework</h2>
     <div class="desc" style="max-width:none">
       Three independent methodologies now dissociate at the N-terminus, not two:
@@ -267,6 +324,13 @@ footer { color: var(--text-muted); font-size: 0.78rem; margin-top: 8px; line-hei
       significantly more than overwriting the null-signal control positions, in 3 of 4 tested directions. Reading
       and intervention agree.
     </p>
+    <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6;">
+      The attention-sink control adds a fourth: displacing the true N-terminus by 50 residues moves the
+      fine-grained signal pattern with it (r=0.67&ndash;0.71 across matched positions) rather than leaving a
+      residual signature at the new sequence start. Reading, intervention, and displacement all point the same
+      way &mdash; the ~4&ndash;8 gate is content-dependent, not a positional artifact of sitting near the start
+      of a sequence.
+    </p>
   </div>
 
   <footer>
@@ -276,8 +340,10 @@ footer { color: var(--text-muted); font-size: 0.78rem; margin-top: 8px; line-hei
     would otherwise discard the N-terminus as an "attention sink" position) on 719 PRS prompts, target layer 11,
     dim_batch=16, converged to relative change &lt;5&times;10<sup>&minus;4</sup>. Protein2 readouts use the same
     fitted lens (no refitting), with position offsets computed from the "&lt;ps1&gt;," / ",&lt;ps2&gt;,"
-    marker lengths. All p-values two-sided Mann&ndash;Whitney U except the activation-patching test, which uses
-    the two-sided Wilcoxon signed-rank test (paired across donor&ndash;recipient pairs).
+    marker lengths. The attention-sink control uses a curated MED4-100 PRS/RRS set with a shared seed-42
+    50-residue random prefix prepended to both proteins per matched row. All p-values two-sided
+    Mann&ndash;Whitney U except the activation-patching test (two-sided Wilcoxon signed-rank, paired across
+    donor&ndash;recipient pairs) and the baseline/shifted pattern comparison (Pearson/Spearman correlation).
   </footer>
 </div>
 
@@ -392,4 +458,38 @@ heatmap('heatmap2', 'heatTable2', {
   middle:  [-0.001,0.009,0.040,0.101,-0.043,0.039,0.135,0.391,0.382,0.366,0.344],
   c_term:  [0.005,0.004,0.053,0.147,0.065,0.177,0.359,0.580,0.594,0.655,0.410],
 });
+
+(function attnSinkChart(){
+  const positions = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+  const baseline_d = [+0.377,-0.154,+0.360,+0.600,+0.388,+0.497,+0.559,+0.394,+0.481,-0.111,+0.375,-0.061,+0.032,+0.202,-0.170];
+  const shifted_d   = [+0.246,-0.127,+0.027,+0.037,-0.112,+0.348,+0.132,+0.101,+0.077,+0.035,+0.106,-0.089,-0.081,-0.009,-0.188];
+
+  const svg = document.getElementById('attnSinkChart');
+  const W=820,H=260, m={top:16,right:24,bottom:34,left:44};
+  const iw=W-m.left-m.right, ih=H-m.top-m.bottom;
+  const xs = i => m.left + (i/(positions.length-1))*iw;
+  const yMin=-0.35, yMax=0.7;
+  const ys = v => m.top + ih - ((v-yMin)/(yMax-yMin))*ih;
+
+  let s = '';
+  for(let v=-0.25; v<=0.65; v+=0.25){
+    s += `<line class="gridline" x1="${m.left}" x2="${W-m.right}" y1="${ys(v)}" y2="${ys(v)}"/>`;
+    s += `<text class="tick-text" x="${m.left-8}" y="${ys(v)+3}" text-anchor="end">${v.toFixed(2)}</text>`;
+  }
+  s += `<line class="baseline" x1="${m.left}" x2="${W-m.right}" y1="${ys(0)}" y2="${ys(0)}"/>`;
+  positions.forEach((p,i)=>{
+    s += `<text class="tick-text" x="${xs(i)}" y="${H-m.bottom+16}" text-anchor="middle">${p}</text>`;
+  });
+  s += `<text class="axis-label" x="${m.left+iw/2}" y="${H-4}" text-anchor="middle">Matched relative position (baseline 0-14 / +50-shifted 50-64)</text>`;
+
+  function pathFor(arr){
+    return arr.map((v,i)=> (i===0?'M':'L') + xs(i).toFixed(1) + ',' + ys(v).toFixed(1)).join(' ');
+  }
+  s += `<path class="line-real" d="${pathFor(baseline_d)}"/>`;
+  s += `<path class="line-random" d="${pathFor(shifted_d)}"/>`;
+  baseline_d.forEach((v,i)=> s += `<circle class="dot-real" cx="${xs(i)}" cy="${ys(v)}" r="3.5"><title>position ${positions[i]}: baseline d=${v.toFixed(3)}</title></circle>`);
+  shifted_d.forEach((v,i)=> s += `<circle class="dot-random" cx="${xs(i)}" cy="${ys(v)}" r="3.5"><title>position ${positions[i]}: shifted d=${v.toFixed(3)}</title></circle>`);
+
+  svg.innerHTML = s;
+})();
 </script>
